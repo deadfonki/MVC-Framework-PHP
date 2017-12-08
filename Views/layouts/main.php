@@ -1,4 +1,3 @@
 <?php
 
-
-echo 'ss';
+echo $content;

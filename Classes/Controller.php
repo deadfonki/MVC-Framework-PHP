@@ -23,63 +23,79 @@ Abstract class Controller
         $this->registry = $registry;
         $this->controllername = explode('Controller',$this->classname);
         $this->controllername = $this->controllername[0];
-
+        $this->render('emptypage',SitePath.'/www/test/');
     }
 
-   protected function render($file)
+   protected function render($file,$path =null)
     {
-        $path = '';
-        if (ucfirst($this->controllername) != 'index')
-        {
-            $path = SitePath.'/www/Views/'.$this->controllername;
+
+        if ($path == null) {
+            if (ucfirst($this->controllername) != 'index') {
+                $path = SitePath . '/www/Views/' . $this->controllername;
+            } else {
+                $path = SitePath . '/www/Views/site';
+            }
+            $filename = $path . '/' . $file;
+            if (substr($file, -3) == 'php') {
+                $filename = $path . '/' . $file;
+            } else {
+                $filename = $path . '/' . $file . '.php';
+            }
+            if (file_exists($filename)) {
+                ob_end_clean();
+                $this->content = include($filename);
+                ob_start(null,null,true);
+            } else {
+                throw  new Exception('View файл не найден');
+            }
         }
         else
         {
-            $path = SitePath.'/www/Views/site';
-        }
-        $filename = $path.'/'.$file;
-        if (substr($file,-3) == 'php')
-        {
-            $filename = $path.'/'.$file;
-        }
-        else
-        {
-            $filename = $path.'/'.$file.'.php';
-        }
-        if (file_exists($filename))
-        {
-            ob_end_clean();
-            $this->content = include ($filename);
-        }
-        else
-        {
-            throw  new Exception('View файл не найден');
+            $filename = $path . '/' . $file;
+            if (substr($file, -3) == 'php') {
+                $filename = $path . '/' . $file;
+            } else {
+                $filename = $path . '/' . $file . '.php';
+            }
+            if (file_exists($filename)) {
+                ob_end_clean();
+                $this->content = include($filename);
+                ob_start(null,null,true);
+            } else {
+                throw  new Exception('View файл не найден');
+            }
         }
 
 
     }
     protected function setLayout($layoutname)
     {
-        $path = SitePath.'/www/Views/layouts';
-         $filename = $path.'/'.$layoutname;
-        if (substr($layoutname,-3) == 'php')
-        {
-            $filename = $path.'/'.$layoutname;
-        }
-        else
-        {
-            $filename = $path.'/'.$layoutname.'.php';
-        }
 
-        if (file_exists($filename))
-        {
-            ob_end_clean();
-            $this->content = include ($filename);
-        }
-        else
-        {
-            throw  new Exception('View файл не найден');
-        }
+            $path = SitePath.'/www/Views/layouts';
+            $filename = $path.'/'.$layoutname;
+            if (substr($layoutname,-3) == 'php')
+            {
+                $filename = $path.'/'.$layoutname;
+            }
+            else
+            {
+                $filename = $path.'/'.$layoutname.'.php';
+            }
+
+            if (file_exists($filename))
+            {
+                ob_end_clean();
+                $this->content = include ($filename);
+                ob_start(null,null,true);
+            }
+            else
+            {
+                throw  new Exception('View файл не найден');
+            }
+
+
+
+
     }
 
     abstract function index();

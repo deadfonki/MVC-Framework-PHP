@@ -11,7 +11,7 @@ class IndexController extends Controller
 
     function index()
     {
-        echo "hel";
+
     }
 
 }

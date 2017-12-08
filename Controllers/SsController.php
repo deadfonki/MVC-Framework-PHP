@@ -11,7 +11,7 @@ class SsController extends Controller
 
     function index()
     {
-      
+     $this->render('s');
     }
 
 }
